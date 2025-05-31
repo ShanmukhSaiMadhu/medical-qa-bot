@@ -12,7 +12,7 @@ load_dotenv()
 
 # Load Hugging Face embeddings and FAISS vectorstore
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-db = FAISS.load_local("app/faiss_index", embeddings, allow_dangerous_deserialization=True)
+db = FAISS.load_local(os.path.join(os.path.dirname(__file__), "faiss_index"), embeddings, allow_dangerous_deserialization=True)
 
 # Prompt template
 prompt_template = """
@@ -45,7 +45,7 @@ llm = ChatGroq(
 # Create QA chain
 qa_chain = RetrievalQA.from_chain_type(
     llm=llm,
-    retriever=db.as_retriever(search_kwargs={"k": 3}),
+    retriever=db.as_retriever(search_kwargs={"k": 4}),
     chain_type_kwargs={"prompt": PROMPT},
     return_source_documents=False
 )
